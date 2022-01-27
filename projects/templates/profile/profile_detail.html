@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Личный кабинет{% endblock %}
+
+{% block content %}
+    <h1>Профиль пользователя</h1>
+    <div class="d-flex flex-row-reverse"> 
+    <button type="button" onclick="window.location.href = 'edit/';" class="btn btn-success"  >Редактировать</button>
+    </div>
+    <form >
+        <fieldset disabled="disabled">
+            {{ user_form|crispy }}
+            {{ profile_form|crispy }}
+            {% csrf_token %}
+        </fieldset>
+    </form>
+{% endblock %}

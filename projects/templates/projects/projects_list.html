@@ -1,0 +1,173 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block title %}
+    Мои проекты
+{% endblock title%}
+{% block content %}
+<form action="" method="get" style="padding-bottom: 30px">
+    <div class="form-group row">
+        <div class="col-1">
+            Компания
+        </div>
+        <div class="col" >
+            {{ filter.form.user__company.as_widget}}
+        </div>
+        <div class="col-1">
+            Менеджер
+        </div>
+        <div class="col" >
+            {{ filter.form.user.as_widget}}
+        </div>
+        <div class="col">
+            {{ filter.form.neocom_status.label}}
+        </div>
+        <div class="col" >
+            {{ filter.form.neocom_status.as_widget}}
+        </div>
+    
+        <div class="col" > 
+            {{ filter.form.manager_status.label}}
+        </div>
+        <div class="col" >
+            {{ filter.form.manager_status.as_widget}}
+        </div>
+
+    </div>
+    <input type="submit" value="Показать" class="btn btn-primary"/>
+    <button type="button"onclick="window.location.href = 'create/';" class="btn btn-success" style="float:right">Добавить</button>
+    {% if request.user.is_superuser %}
+        <button type="button"onclick="window.location.href = 'filters/';" class="btn btn-success" style="margin-right:10px;float:right">Фильтры</button>
+    {% endif %}
+</form>
+    <table class="table table-hover">
+        <thead class="thead-dark" > 
+            <tr> 
+                <th scope="col"> UID</th> <!-- this doesn't exist-->
+                <th scope="col"> Название </th>
+                <th scope="col"> Партнер</th>
+                <th scope="col"> Статус проекта </th> <!-- this doesn't exist. Pictures are located on ./www/static "ok", "no", "progress"-->
+                <!--<th > Статус договора</th>
+                <th scope="col"> Дата создания </th> -->
+                <th scope="col"> Вероятность реализации </th>
+                <th scope="col"> Одобрение </th> 
+                <th scope="col"> Список заказа </th>
+                <th scope="col"> Оценка проекта </th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for project in filter.qs %} 
+            <tr  class=""
+            {% if project.neocom_status == 1%}
+                class="table-success"
+            {% elif project.neocom_status == 2%}
+                class="table-danger"
+            {% else%}
+                class="table-primary"
+            {% endif%}
+            > 
+                <td style="width:5%;cursor:pointer; font-weight:bold; vertical-align:middle;" onclick="window.location.href = '{% url 'projects:project_detail' project.slug%}';">
+                    {{ project.pk }}
+                </td>
+
+                <td style="width:20%;cursor:pointer; font-weight:bold; vertical-align:middle;" onclick="window.location.href = '{% url 'projects:project_detail' project.slug%}';">       {{ project.project_name }}
+                </td>
+                
+                <td style="width:10%;cursor:pointer; vertical-align:middle;" onclick="window.location.href = '{% url 'projects:project_detail' project.slug%}';">
+                    {{ project.user.company }} 
+                </td>
+               <!-- <td style="width:5%;cursor:pointer" onclick="window.location.href = '{% url 'projects:project_detail' project.slug%}';"
+                    {% if project.user.company.check_license %} 
+                        class="status-plus"
+                    {% else %}
+                         class="status-minus"
+                    {% endif %}
+                    >
+                </td>
+                <td style="width:10%;cursor:pointer" onclick="window.location.href = '{% url 'projects:project_detail' project.slug%}';">
+                    {{ project.created|date:"d-m-Y"}}
+                </td> 
+                <td style="width:10%;cursor:pointer" onclick="window.location.href = '{% url 'projects:project_detail' project.slug%}';">
+                    {{ project.end_date|date:"d-m-Y"}}
+                </td> -->
+                 <td style="width:2%;cursor:pointer" onclick="window.location.href = '{% url 'projects:project_detail' project.slug%}';"
+                 {% if project.manager_status == 1 or project.manager_status == 0 %}
+                        
+
+                            {% if project.probability == 80 or project.probability == 90 or project.probability == 100 %}
+                                class="state-project-progress-100"
+                            {% elif project.probability == 50 or project.probability == 60 or project.probability == 70 %}
+                                class="state-project-progress-75"
+                            {% elif project.probability == 30 or project.probability == 40 %}
+                                class="state-project-progress-75"
+                            {% else %}
+                                class="state-project-progress-25"
+                            {% endif %}
+
+                    {% elif project.manager_status == 2 %}
+                        class="state-project-ok"
+                    {% else %}
+                        class="state-project-no"
+                    {% endif%}>
+                </td>
+
+               
+
+
+                <td style="width:1%; text-align: center; vertical-align:middle; font-weight:bold"> 
+                    {{project.probability}}%
+
+                </td> 
+
+                <td style="width:5%;cursor:pointer" onclick="window.location.href = '{% url 'projects:project_detail' project.slug%}';"
+                 {% if project.neocom_status == 1%}
+
+
+
+
+
+                        class="neocom-state-project-plus"
+                    {% elif project.neocom_status == 2%}
+                        class="neocom-state-project-minus"
+                    {% else%}
+                        class="neocom-state-project-question"
+                    {% endif%}>
+                </td>
+
+                 <td style="width:18%">
+                    <ul class="list-group list-projects"> 
+                    {% for order in project.orderitems.all %}
+                        <li class="d-flex justify-content-between align-items-center{% if forloop.counter > 1%} list-more show  {% endif%}">
+                                {{ order.product.toStringName }}
+                            <span class="badge badge-primary badge-pill">{{ order.quantity }} </span>
+                        </li>
+                    {% endfor %}
+                    {% if project.orderitems.count > 1 %}
+                        <a class="show-more" href="javascript:void(0);" > Развернуть  </a>
+                    {% endif %}
+                    </ul>
+                </td>
+
+                <td style="width:5%; text-align: right; vertical-align:middle;"; > 
+                    {{project.get_full_price}} $
+                </td> 
+            </tr>
+        {% endfor %}
+        <tbody>
+    </table>
+<div class="pagination">
+    <span class="step-links">
+        {% if projects.has_previous %}
+            <a href="{{request.get_full_path}}&page={{ projects.previous_page_number }}">&laquo;</a>
+        {% endif %}
+
+        <span class="current">
+            Страница {{ projects.number }} из {{ projects.paginator.num_pages }}
+        </span>
+
+        {% if projects.has_next %}
+            <a href="{{request.get_full_path}}&page={{ projects.next_page_number }}">&raquo;</a>
+        {% endif %}
+    </span>
+</div>   
+<script src="{% static 'js/scripts.js' %}"></script>
+{% endblock content%}

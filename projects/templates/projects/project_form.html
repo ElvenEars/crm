@@ -1,0 +1,131 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block scripts %}
+<script src="{% static 'js/jquery.maskedinput.min.js' %}"></script>
+{% endblock scripts %}
+{% block content %}
+{% load crispy_forms_tags %}
+<form action="" method="post">
+<fieldset>
+    {% csrf_token %}
+    <div class="form-group row">
+        <div class="col-2">
+            {{ form.manager_status.label}}
+        </div>
+        <div class="col">
+            {{ form.manager_status.as_widget}}
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-2">
+            {{ form.project_name.label}}
+        </div>
+        <div class="col">
+            {{ form.project_name.as_widget}}
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-2">
+            {{ form.inn.label}}
+        </div>
+        <div class="col">
+            {{ form.inn.as_widget}}
+        </div>
+    </div>    
+    <div class="form-group row">
+        <div class="col-2">
+            {{ form.end_customer.label}}
+        </div>
+        <div class="col">
+            {{ form.end_customer.as_widget}}
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-2">
+            {{ form.probability.label}}
+        </div>
+        <div class="col">
+            {{ form.probability.as_widget}}
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-2">
+            {{ form.contacts.label}}
+        </div>
+        <div class="col">
+            {{ form.contacts.as_widget}}
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-2">
+            {{ form.end_date.label}}
+        </div>
+        <div class="col">
+            {{ form.end_date.as_widget}}
+        </div>
+    </div>
+        {{form.neocom_status|as_crispy_field}}
+        <div {% if not request.user.is_superuser %} style="display:none" {% endif%}>
+            <div class="form-group row">
+                <div class="col-2">
+                    {{ form.user.label}}
+                </div>
+                <div class="col">
+                    {{ form.user.as_widget}}
+                </div>
+            </div>
+        </div>
+        {{form.slug|as_crispy_field}}
+        {% if request.path != '/projects/create/' %} 
+            <label >Номенклатура</label>
+        {% endif %}
+        {% regroup products by category.name as categories %}
+
+        {% for category in categories %}
+            <a class="toggle" href="javascript:void(0);">
+                <div class="form-control plus" style="margin-bottom:10px">{{ category.grouper }} </div>
+            </a>
+            <table> 
+                <ul class="inner projects-products" style="display:none;">
+                    {% for product in category.list %}
+                    <li class="product {% for key,value in quantity.items %}{% if key == product.pk and value > 0%}product-checked{% endif %}{% endfor %}">
+                        <div class="row" >
+                            <div class="col-3" >  
+                                <div class="product-title" style="font-weight:bold"> 
+                                    {{ product.name }}
+                                </div>
+                            </div> 
+                            <div class="col-1" >  
+                                <div class="product-title" > 
+                                    
+                                    {{ product.code }}
+                                </div>
+                            </div> 
+                            <div class="col" >  
+                                <div class="product-title" > 
+                                    {{ product.description }}
+                                </div>
+                            </div> 
+                            <div class="col-1" >  
+                                <div class="product-title" > 
+                                    {{ product.price }}
+                                </div>
+                            </div> 
+                            <div class="col-1">
+                                <input type="text" name="{{product.pk}}-quantity" {% for key,value in quantity.items %}{% if key == product.pk %}value="{{value}}"{% endif %}{% endfor %} class="form-control product-count" id="{{product.pk}}-quantity"> 
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </table>
+        {% endfor %}   
+    {% if request.path != '/projects/create/' %} 
+        <input type="submit" value="Сохранить" class="btn btn-success" />
+    {% else %}  
+         <input type="submit" value="Сохранить и продолжить" class="btn btn-success"/>
+    {% endif %}
+ </fieldset>   
+</form>
+<script src="{% static 'js/scripts.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block title %}
+    Мои проекты
+{% endblock title%}
+{% block content %}
+     {% regroup products by category.name as categories %}
+
+        {% for category in categories %}
+            <a class="toggle" href="javascript:void(0);">
+                <div class="form-control plus" style="margin-bottom:10px">{{ category.grouper }} </div>
+            </a>
+            <table> 
+                <ul class="inner projects-products products" style="display:none;">
+                    {% for product in category.list %}
+                    <li>
+                    <div class="row" >
+                        <div class="col-3" >  
+                            <div  style="font-weight:bold"> 
+                                {{ product.name }}
+                            </div>
+                        </div> 
+                        <div class="col-1" >  
+                            <div class="product-title" > 
+                              
+                                {{ product.code }}
+                            </div>
+                        </div> 
+                        <div class="col" >  
+                            <div class="product-title" > 
+                                {{ product.description }}
+                            </div>
+                        </div> 
+                        <div class="col-1" >  
+                            <div class="product-title" > 
+                                {{ product.price }}
+                            </div>
+                        </div>
+                    </div>
+                    </li>
+                    
+                    {% endfor %}
+                </ul>
+            </table>
+        {% endfor %}   
+  
+<script src="{% static 'js/scripts.js' %}"></script>
+{% endblock content%}

@@ -1,0 +1,31 @@
+http://m.mirapolis.ru/m/miravr/0614294232
+
+https://cll-ng.cisco.com/users/pblogin
+Instructor Token: saatb
+
+Students Credentials		Иван
+Username: 202003509449
+Password: sS3QUatZ
+Information: Group 1 Pod 1	Дмитрий
+Username: 202003509450
+Password: bABySZpe
+Information: Group 1 Pod 1	Александр
+Username: 202003509451
+Password: rEfDjUr2
+Information: Group 1 Pod 1	Вадим
+Username: 202003509452
+Password: W3KvsWE5
+Information: Group 1 Pod 1
+Username: 202003509453
+Password: k9GJxTwr
+Information: Group 1 Pod 1
+Equipment Passwords
+
+learningspace.cisco.com
+vr58L39NZtefO2Gl9JhF		Иван
+K8P7OMV446695HcjdA3C		Дмитрий
+Gv1PJm5u46A3655TtIN4		Александр	
+UUuuiOf56Ta45M2StrS4		Вадим
+SDy129v4okQkh09DmIes
+
+http://protorrent.xyz/viewtopic.php?t=14563

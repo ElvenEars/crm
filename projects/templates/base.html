@@ -1,0 +1,48 @@
+{% load static%}
+<!DOCTYPE html>
+<html laamg="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta mane = "decription" content ="{% block desc %} {% endblock desc %}">
+    <title> {% block title %} {% endblock title %}</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"/>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    {% block scripts %} {% endblock scripts %}
+</head>
+<body> 
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="/projects/">Neocom</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  {% if user.is_authenticated %}
+  <div class="collapse navbar-collapse" id="navbarColor02">
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item {% if request.path == '/projects/' %} active {% endif %} ">
+        <a class="nav-link" href="/projects/">Мои Проекты</a>
+      <li class="nav-item {% if request.path == '/projects/products/' %}active{% endif %}">
+        <a class="nav-link" href="/projects/products/">Продукция</a>
+      </li>
+      {% if perms.project.view_company %}
+      <li class="nav-item {% if request.path == '/projects/companies/' %}active{% endif %}">
+        <a class="nav-link" href="/projects/companies/">Компании</a>
+      </li>
+      {% endif%}
+      <li class="nav-item {% if request.path == '/profile/' %}active{% endif %}">
+        <a class="nav-link" href="/profile/">Личный кабинет</a>
+      </li>
+    </ul>
+    <a class="nav-link" style="color:#fff" href="/logout/">Выход</a>
+  </div>
+  {% endif %} 
+</nav>
+    <div style="margin-top:40px" class="container">
+
+        {% block content %} {% endblock content %}
+
+    </div>
+</body>

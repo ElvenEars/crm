@@ -1,0 +1,107 @@
+{% extends 'base.html'%}
+{% block title %}
+{{ project.project_name }}
+{% endblock title%}
+{% block content %}
+<div class="d-flex flex-row-reverse"> 
+<button type="button" onclick="window.location.href = 'delete/';"
+class="btn btn-danger"  >Удалить</button>
+{% if project.neocom_status != 2 %}
+<button type="button" onclick="window.location.href = 'update/';"
+ class="btn btn-success" style="margin-right:10px">Редактировать</button>
+{% endif %}
+</div>
+ <div class="clear"> </div>
+    <form>
+        <fieldset disabled="disabled">
+        <table class= "table table-responsive-md"> 
+            <tr> 
+                <td colspan="4" style="font-weight:bold;text-align:center"> {{ project.project_name }} </td>
+            <tr>
+            <tr {% if project.neocom_status == 1%}
+                    class="good"
+                {% elif project.neocom_status == 2%}
+                    class="bad"
+                {% elif project.neocom_status == 0%}
+                    class="dont-know"
+                {% endif%}> 
+                <th > Статус одобрения </th>
+                <td colspan="7"> {{project.get_neocom_status}} </td>
+            <tr>
+            <tr> 
+                <th > Статус реализации </th>
+                <td colspan="7"> {{project.get_manager_status}} </td>
+            <tr>
+            <tr> 
+                <th > ИНН </th>
+                <td colspan="7"> {{ project.inn }} </td>
+            <tr>
+            <tr> 
+                <th >Вероятность реализации </th>
+                <td colspan="7"> {{ project.probability }} </td>
+            <tr>
+            <tr> 
+                <th >Конечный заказчик </th>
+                <td colspan="7"> {{ project.end_customer}} </td>
+            <tr>
+            <tr> 
+                <th >Дата завершения </th>
+                <td colspan="7"> {{ project.end_date }} </td>
+            <tr>
+            <tr> 
+                <th >Дата создания </th>
+                <td colspan="7"> {{ project.created}} </td>
+            <tr>
+            <tr> 
+                <th >Контакты </th>
+                <td colspan="7"> {{ project.contacts }} </td>
+            <tr>
+            <tr> 
+                <th >Компания </th>
+                <td colspan="7"> {{ project.user.company }} </td>
+            <tr>
+            {% if project.user.company.check_license %}
+            <tr class="good">   
+                <th >Сублицизионый договор </th>
+                <td colspan="7" > Действителен </td> 
+            <tr>
+            {% else %}
+            <tr class="bad">   
+                <th >Сублицизионый договор </th>
+                <td colspan="7" > Недействителен </td> 
+            <tr>
+            {% endif %}
+            <tr> 
+                <th colspan="4" style="text-align:center" scope="col">Номенклатура </th>
+            </tr>
+            <tr> 
+                            <th style="width:10%" scope="col">Код</th>
+                            <th style="width:10%" scope="col">Название</th>
+                            <th style="width:45%" scope="col">Описание</th>
+                            <th style="width:5%" scope="col">Кол</th>
+                            <th style="width:10%" scope="col">Цена</th>
+                            <th style="width:10%" scope="col">Закупка</th>
+                            <th style="width:10%" scope="col">Сумма</th>
+                        </tr> 
+                        {% for order in project.orderitems.all %}
+                            <tr > 
+                                <th > {{order.product.code}} </th>
+                                <td> {{ order.product.name }} </td>
+                                <td> {{ order.product.description }} </td>
+                                <td style="text-align:center"> {{ order.quantity }} </td>
+                                <td style="text-align:center"> {{ order.get_product_price }} $</td>
+                                <td style="text-align:center"> {{ order.get_product_buying_price}} </td>
+                                <td style="text-align:center"> {{ order.get_order_price }} $</td>
+                            </tr>
+                        {% endfor %}
+                        <tr> 
+                            <th> Итого: </th>
+			<th style="width:90%;text-align:right" colspan="5">{{ project.get_full_internal_price}} $</th>
+                            <th style="width:90%;text-align:right">{{ project.get_full_price}} $</th>
+                        </tr>
+        </table>
+           
+       </fieldset>
+    </form>
+
+{% endblock content%}
